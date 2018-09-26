@@ -23,19 +23,21 @@ void signal_handler(int sig)
 }
 
 int main(int argc, char *argv[]) {
-    // using GPIO port 1 to control led 3, using gpio port 3 to control led 2
+    // using GPIO port 1 to control led 1 at gpio49 at 23, using gpio port 3 to control led 2 at gpio115 at 25
     volatile void *gpio_addr_1;
-    volatile void *gpio_addr_3;
+    volatile void *gpio_addr_0;
     
     volatile unsigned int *gpio_oe_addr_1;
+    volatile unsigned int *gpio_datain_1;
     volatile unsigned int *gpio_setdataout_addr_1;
     volatile unsigned int *gpio_cleardataout_addr_1;
-    volatile unsigned int *gpio_oe_addr_3;
-    volatile unsigned int *gpio_setdataout_addr_3;
-    volatile unsigned int *gpio_cleardataout_addr_3;
+    volatile unsigned int *gpio_oe_addr_0;
+    volatile unsigned int *gpio_datain_0;
+    volatile unsigned int *gpio_setdataout_addr_0;
+    volatile unsigned int *gpio_cleardataout_addr_0;
 
     unsigned int reg_1;
-    unsigned int reg_3;
+    unsigned int reg_0;
     
     // Set the signal callback for Ctrl-C
 	signal(SIGINT, signal_handler);
@@ -45,15 +47,18 @@ int main(int argc, char *argv[]) {
     gpio_addr_1 = mmap(0, GPIO1_SIZE, PROT_READ | PROT_WRITE, MAP_SHARED, fd, GPIO1_START_ADDR);
 
     gpio_oe_addr_1           = gpio_addr_1 + GPIO_OE;
+    gpio_datain_1            = gpio_addr_1 + GPIO_DATAIN;
     gpio_setdataout_addr_1   = gpio_addr_1 + GPIO_SETDATAOUT;
     gpio_cleardataout_addr_1 = gpio_addr_1 + GPIO_CLEARDATAOUT;
     
-    gpio_addr_3 = mmap(0, GPIO3_SIZE, PROT_READ | PROT_WRITE, MAP_SHARED, fd, GPIO3_START_ADDR);
+    gpio_addr_0 = mmap(1, GPIO0_SIZE, PROT_READ | PROT_WRITE, MAP_SHARED, fd, GPIO0_START_ADDR);
 
-    gpio_oe_addr_3           = gpio_addr_3 + GPIO_OE;
-    gpio_setdataout_addr_3   = gpio_addr_3 + GPIO_SETDATAOUT;
-    gpio_cleardataout_addr_3 = gpio_addr_3 + GPIO_CLEARDATAOUT;
-    printf("GPIO port 1 and port 3 are mapped\n");
+    gpio_oe_addr_0           = gpio_addr_0 + GPIO_OE;
+    gpio_datain_0            = gpio_addr_0 + GPIO_DATAIN;
+    gpio_setdataout_addr_0   = gpio_addr_0 + GPIO_SETDATAOUT;
+    gpio_cleardataout_addr_0 = gpio_addr_0 + GPIO_CLEARDATAOUT;
+    
+    printf("GPIO port 1 and port 0 are mapped\n");
     
     
     if(gpio_addr_1 == MAP_FAILED) {
@@ -61,44 +66,33 @@ int main(int argc, char *argv[]) {
         exit(1);
     }
     
-    if(gpio_addr_3 == MAP_FAILED) {
+    if(gpio_addr_0 == MAP_FAILED) {
         printf("Unable to map GPIO\n");
         exit(1);
     }
-    
-    
-    // Set USR3 and USR2 to be an output pin
+
+    // Set USR3 and USR1 to be an output pin
     reg_1 = *gpio_oe_addr_1;
-    reg_3 = *gpio_oe_addr_3;
+    reg_0 = *gpio_oe_addr_0;
     
-    reg_1 &= ~USR3;       // Set USR3 bit to 0
-    reg_3 &= ~USR2;       // Set USR2 bit to 0
+    reg_0 &= ~GPIO_30;       // Set USR3 bit to 0
+    reg_1 &= ~GPIO_60;       // Set USR1 bit to 0
     
     *gpio_oe_addr_1 = reg_1;
-    *gpio_oe_addr_3 = reg_3;
-    
-    printf("Start controlling USR3 and USR2\n");
-    
-    while(keepgoing) {
-        if(*gpio_oe_addr_1 & GPIO_60){
-            printf("button 1 pressed");
-            *gpio_setdataout_addr_1 = USR3;
-            usleep(250000);
-        }
-        *gpio_cleardataout_addr_1 = USR3;
-            usleep(250000);
-        if(*gpio_oe_addr_3 & GPIO_115){
-            printf("button 2 pressed");
-            *gpio_setdataout_addr_3 = USR2;
-            usleep(250000);
-        }
-        *gpio_cleardataout_addr_3 = USR2;
-            usleep(250000);
-    }
+    *gpio_oe_addr_0 = reg_0;
 
-    munmap((void *)gpio_addr_1, GPIO1_SIZE);
-    munmap((void *)gpio_addr_3, GPIO3_SIZE);
+    while(keepgoing) {
+	if(!(*gpio_datain_1 & GPIO_60)){        
+        *gpio_setdataout_addr_1 = USR2;
+        }
+        *gpio_cleardataout_addr_1 = USR2;
+	}
 
     close(fd);
     return 0;
 }
+
+
+
+
+
