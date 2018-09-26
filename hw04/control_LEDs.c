@@ -82,11 +82,16 @@ int main(int argc, char *argv[]) {
     *gpio_oe_addr_0 = reg_0;
 
     while(keepgoing) {
-	if(!(*gpio_datain_1 & GPIO_60)){        
+	if*(gpio_datain_1 & GPIO_60){        
         *gpio_setdataout_addr_1 = USR2;
         }
         *gpio_cleardataout_addr_1 = USR2;
 	}
+	if*(gpio_datain_0 & GPIO_30){        
+        *gpio_setdataout_addr_0 = USR3;
+        }
+        *gpio_cleardataout_addr_0 = USR3;
+	}	
 
     close(fd);
     return 0;
