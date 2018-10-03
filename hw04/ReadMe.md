@@ -12,3 +12,13 @@ Professor Yoder's Comments
 ReadMe.md is missing.  Add it and I'll regrade.
 
 Score:  0/10
+
+========================
+Professor Yoder's Comments
+
+Looks good for a start.  
+Need to demo the LCD to me.
+I don't see your memory map.
+
+
+Score:  6/10

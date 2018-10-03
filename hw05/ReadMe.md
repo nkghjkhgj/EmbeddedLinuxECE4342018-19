@@ -13,3 +13,11 @@ Kernel Modules:
  Challenge: 
  build_kernel.sh didn't work at the beginnig, tried newest version of ubuntu, still didn't work. Had to install a 64-bt 
  system, and the problem resolved.
+
+========================
+Professor Yoder's Comments
+
+Looks good. Use rmmod to remove a module.
+So switching to a 64-bit host solved the problem.  Thanks for making it work.
+
+Score:  10/10
