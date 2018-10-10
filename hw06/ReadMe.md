@@ -9,3 +9,9 @@
 9. Mainline is the thread being run before any interrupts are detected.
 10. Because it needs to wait for the current thread to be finished first without real-time patch.
 
+========================
+Professor Yoder's Comments
+
+Score:  10/10
+
+Try searching "linux mainline kernel"
