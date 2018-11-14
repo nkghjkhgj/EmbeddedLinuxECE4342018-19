@@ -5,3 +5,10 @@ The scripts can be found in the folder.
 
 2. Project
 Kuangyi and I created a new page called Project-Music Synthesizer and edited the executive summary.
+
+========================
+Professor Yoder's Comments
+
+Score:  10/10
+
+Be sure to add your name to the wiki page.
